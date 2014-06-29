@@ -223,24 +223,25 @@ function! TrimLine(pline)
       if sub_line != ''
         let new_line .= '_'
       endif
-    elseif c == '/'
-      " Skip all if match a comment
-      if line[min_pos+1] == '/' 
-        let sub_line = matchstr(line, '^/.*', min_pos)
-        if min_pos == 0 && sub_line != ''
-          let new_line = '//c'
-          break
-        endif
-      elseif line[min_pos+1] == '*'
-        let sub_line = matchstr(line, '^/\*.\{-}\*/', min_pos)
-      else
-        " /.../ sometimes is not a regexp, (a / b); // c
-        let m = matchlist(line, '^\(/[^/]\+/\)\([^/]\|$\)', min_pos)
-        if len(m)
-          let new_line .= '_'
-          let sub_line = m[1]
-        endif
-      endif
+    " this is buggy, so just skip regexps
+    " elseif c == '/'
+    "   " Skip all if match a comment
+    "   if line[min_pos+1] == '/' 
+    "     let sub_line = matchstr(line, '^/.*', min_pos)
+    "     if min_pos == 0 && sub_line != ''
+    "       let new_line = '//c'
+    "       break
+    "     endif
+    "   elseif line[min_pos+1] == '*'
+    "     let sub_line = matchstr(line, '^/\*.\{-}\*/', min_pos)
+    "   else
+    "     " /.../ sometimes is not a regexp, (a / b); // c
+    "     let m = matchlist(line, '^\(/[^/]\+/\)\([^/]\|$\)', min_pos)
+    "     if len(m)
+    "       let new_line .= '_'
+    "       let sub_line = m[1]
+    "     endif
+    "   endif
     endif
     if sub_line != ''
       let min_pos = min_pos + strlen(sub_line)
